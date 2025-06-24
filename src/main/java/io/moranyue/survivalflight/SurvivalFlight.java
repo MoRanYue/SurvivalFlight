@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import io.moranyue.survivalflight.FlyCommand;
-import io.moranyue.survivalflight.TeleportListener;
-import io.moranyue.survivalflight.PlayerFlightStatus;
-import io.moranyue.survivalflight.PlayerDataStorageListener;
 
 public class SurvivalFlight extends JavaPlugin {
     private Logger logger;
@@ -68,7 +64,7 @@ public class SurvivalFlight extends JavaPlugin {
         fly_command.setExecutor(new FlyCommand(this));
         
         PluginManager plugin_manager = getServer().getPluginManager();
-        plugin_manager.registerEvents(new TeleportListener(this), this);
+        plugin_manager.registerEvents(new StatusRecoveryListener(this), this);
         plugin_manager.registerEvents(new PlayerDataStorageListener(this), this);
 
         logger.info("The plugin has loaded.");

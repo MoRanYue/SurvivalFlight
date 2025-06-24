@@ -25,7 +25,7 @@ tasks{
     manifest {
       attributes(
         "Main-Class" to "io.moranyue.survivalflight.SurvivalFlight",
-        "Implementation-Version" to archiveVersion.getOrElse("1.0.1")
+        "Implementation-Version" to archiveVersion.getOrElse("1.0.2")
       )
     }
   }

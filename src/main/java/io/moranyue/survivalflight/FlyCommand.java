@@ -1,5 +1,7 @@
 package io.moranyue.survivalflight;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -54,16 +56,17 @@ public class FlyCommand implements CommandExecutor {
     }
 
     private void toggle_flight(Player player, double speed, FileConfiguration config) {
+        UUID uuid = player.getUniqueId();
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            plugin.get_player_data(player.getUniqueId()).is_enabled = false;
+            plugin.set_player_data(uuid, plugin.get_player_data(uuid).speed, false);
             player.sendMessage(ChatColor.RED + config.getString("messages.flight_is_disabled", "The flight is disabled."));
         }
         else {
             player.setAllowFlight(true);
             player.setFlySpeed((float) (speed / 10));
-            plugin.set_player_data(player.getUniqueId(), speed, true);
+            plugin.set_player_data(uuid, speed, true);
             player.sendMessage(ChatColor.GREEN + config.getString("messages.flight_is_enabled", "The flight is enabled."));
             player.sendMessage(String.format(
                 ChatColor.GREEN + config.getString("messages.set_flight_speed", "Setting the flight speed to %.2f."),
