@@ -10,9 +10,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.GameMode;
 
 public class FlyCommand implements CommandExecutor {
+    private final SurvivalFlight plugin;
+    public FlyCommand(SurvivalFlight plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        FileConfiguration config = Bukkit.getPluginManager().getPlugin("SurvivalFlight").getConfig();
+        FileConfiguration config = plugin.getConfig();
         
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + config.getString("messages.players_only_command", "Only players can use this command."));
@@ -30,7 +35,7 @@ public class FlyCommand implements CommandExecutor {
         double default_speed = config.getDouble("fly_command.default_speed", 1.0);
 
         if (args.length == 0) {
-            toggle_flight(player, default_speed, config);
+            toggle_flight(player, plugin.get_player_data(player.getUniqueId()).speed, config);
             return true;
         }
         else if (args.length == 1) {
@@ -53,11 +58,13 @@ public class FlyCommand implements CommandExecutor {
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
             player.setFlying(false);
+            plugin.get_player_data(player.getUniqueId()).is_enabled = false;
             player.sendMessage(ChatColor.RED + config.getString("messages.flight_is_disabled", "The flight is disabled."));
         }
         else {
             player.setAllowFlight(true);
             player.setFlySpeed((float) (speed / 10));
+            plugin.set_player_data(player.getUniqueId(), speed, true);
             player.sendMessage(ChatColor.GREEN + config.getString("messages.flight_is_enabled", "The flight is enabled."));
             player.sendMessage(String.format(
                 ChatColor.GREEN + config.getString("messages.set_flight_speed", "Setting the flight speed to %.2f."),
@@ -81,6 +88,7 @@ public class FlyCommand implements CommandExecutor {
         }
 
         player.setFlySpeed((float) (speed / 10));
+        plugin.set_player_data(player.getUniqueId(), speed, true);
         player.sendMessage(String.format(
             ChatColor.GREEN + config.getString("messages.set_flight_speed", "Setting the flight speed to %.2f."),
             speed
