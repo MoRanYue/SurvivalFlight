@@ -19,14 +19,26 @@ public class PlayerDataStorageListener implements Listener {
     public void on_player_join(PlayerJoinEvent ev) {
         Player player = ev.getPlayer();
         UUID uuid = player.getUniqueId();
-        
+
         PlayerFlightStatus status = plugin.get_player_data(uuid);
-        plugin.getLogger().info(String.format("Player `%s`'s memorized status: is_enabled = %s, speed = %.2f", player.getName(), String.valueOf(status.is_enabled), status.speed));
+        plugin.getLogger().info(String.format("Player `%s`'s memorized flight status: is_enabled = %s, speed = %.2f",
+            player.getName(), String.valueOf(status.is_enabled), status.speed));
         if (status.is_enabled) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 player.setAllowFlight(true);
                 player.setFlySpeed((float) status.speed / 10);
             }, 1);
         }
+    }
+    
+    @EventHandler
+    public void on_player_quit(PlayerQuitEvent ev) {
+        Player player = ev.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        PlayerFlightStatus status = plugin.get_player_data(uuid);
+        plugin.save_player_data(uuid);
+        plugin.getLogger().info(String.format("Player `%s`'s flight status has been saved: is_enabled = %s, speed = %.2f",
+            player.getName(), String.valueOf(status.is_enabled), status.speed));
     }
 }

@@ -32,7 +32,6 @@ public class FlyCommand implements CommandExecutor {
         }
         
         double max_speed = config.getDouble("fly_command.max_speed", 5.0);
-        double default_speed = config.getDouble("fly_command.default_speed", 1.0);
 
         if (args.length == 0) {
             toggle_flight(player, plugin.get_player_data(player.getUniqueId()).speed, config);

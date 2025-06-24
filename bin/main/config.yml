@@ -1,0 +1,12 @@
+fly_command:
+  default_speed: 1.0
+  max_speed: 5.0
+messages:
+  players_only_command: Only players can use this command.
+  survival_or_adventure_only_command: Only player who are playing Survival or Adventure can use this command.
+  speed_must_be_a_number: The speed must be a number.
+  fly_command_usage: "Usage: /fly [speed]"
+  flight_is_disabled: The flight is disabled.
+  flight_is_enabled: The flight is enabled.
+  set_flight_speed: Setting the flight speed to %.2f.
+  speed_must_be_in_range: The speed must be between 0.1 and %.2f.

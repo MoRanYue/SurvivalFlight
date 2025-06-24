@@ -24,8 +24,9 @@ public class TeleportListener implements Listener {
             PlayerFlightStatus status = plugin.get_player_data(uuid);
             plugin.getLogger().info(String.format("Teleported player `%s`'s flight status: is_enabled = %s, speed = %.2f", player.getName(), String.valueOf(status.is_enabled), status.speed));
             if (status.is_enabled) {
-                player.setAllowFlight(true);
-                player.setFlySpeed((float) status.speed / 10);
+                Player new_player = Bukkit.getPlayer(player.getUniqueId());
+                new_player.setAllowFlight(true);
+                new_player.setFlySpeed((float) status.speed / 10);
             }
         }, 1);
     }
