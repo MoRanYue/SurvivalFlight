@@ -117,12 +117,7 @@ public class SurvivalFlight extends JavaPlugin {
     }
     
     public void set_player_data(UUID uuid, double speed, boolean is_enabled) {
-        if (player_flight_status.containsKey(uuid)) {
-            player_flight_status.get(uuid).speed = speed;
-        }
-        else {
-            player_flight_status.put(uuid, new PlayerFlightStatus(speed, is_enabled));
-        }
+        player_flight_status.put(uuid, new PlayerFlightStatus(speed, is_enabled));
         save_player_data(uuid);
     }
     
