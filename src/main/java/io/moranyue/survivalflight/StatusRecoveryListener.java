@@ -4,9 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerTeleportEvent;
+// import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.EventPriority;
 import java.util.UUID;
 
 public class StatusRecoveryListener implements Listener {
@@ -16,38 +16,34 @@ public class StatusRecoveryListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void on_player_teleport(PlayerTeleportEvent ev) {
+    @EventHandler
+    public void on_player_teleport(PlayerChangedWorldEvent ev) {
         Player player = ev.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            PlayerFlightStatus status = plugin.get_player_data(uuid);
-            plugin.getLogger()
-                    .info(String.format("Teleported player `%s`'s flight status: is_enabled = %s, speed = %.2f",
-                        player.getName(), String.valueOf(status.is_enabled), status.speed));
-            if (status.is_enabled) {
-                Player new_player = Bukkit.getPlayer(player.getUniqueId());
-                new_player.setAllowFlight(true);
-                new_player.setFlySpeed((float) status.speed / 10);
-            }
-        }, 1);
+        PlayerFlightStatus status = plugin.get_player_data(uuid);
+        plugin.getLogger().info(String.format("Player who teleported `%s`'s flight status: is_enabled = %s, speed = %.2f",
+            player.getName(), String.valueOf(status.is_enabled), status.speed));
+        if (status.is_enabled) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                player.setAllowFlight(true);
+                player.setFlySpeed((float) status.speed / 10);
+            }, 5);
+        }
     }
     @EventHandler()
     public void on_player_respawn(PlayerRespawnEvent ev) {
         Player player = ev.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            PlayerFlightStatus status = plugin.get_player_data(uuid);
-            plugin.getLogger()
-                    .info(String.format("Respawned player `%s`'s flight status: is_enabled = %s, speed = %.2f",
-                        player.getName(), String.valueOf(status.is_enabled), status.speed));
-            if (status.is_enabled) {
-                Player new_player = Bukkit.getPlayer(player.getUniqueId());
-                new_player.setAllowFlight(true);
-                new_player.setFlySpeed((float) status.speed / 10);
-            }
-        }, 1);
+        PlayerFlightStatus status = plugin.get_player_data(uuid);
+        plugin.getLogger().info(String.format("Player who respawned `%s`'s flight status: is_enabled = %s, speed = %.2f",
+            player.getName(), String.valueOf(status.is_enabled), status.speed));
+        if (status.is_enabled) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                player.setAllowFlight(true);
+                player.setFlySpeed((float) status.speed / 10);
+            }, 5);
+        }
     }
 }
